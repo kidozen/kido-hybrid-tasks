@@ -6,6 +6,12 @@ This sample application serves bothh as a hybrid and web application depending o
 
 ### Building the hybrid app
 
+This sample was created with `cordova@2.8.15`. In order to install this version you can do:
+
+	npm install -g cordova@2.8.15
+
+Note: npm is the package manager of node.js.
+
 You can build the Hybrid app and then open the Android solution with an IDE like Android Studio, like this:
 
 	cordova build
