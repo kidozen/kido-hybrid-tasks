@@ -2,10 +2,10 @@
 <widget id="com.kidozen.cordova.tasks" version="2.0.0" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
     <name>Tasks</name>
     <description>
-        A sample Apache Cordova application that responds to the deviceready event.
+        A sample KidoZen application.
     </description>
-    <author email="callback-dev@incubator.apache.org" href="http://cordova.io">
-        Apache Cordova Team
+    <author email="development@kidozen.com" href="http://kidozen.com">
+        KidoZen Team
     </author>
     <icon height="512" src="res/icon/cordova_512.png" width="512" />
     <icon cdv:platform="android" height="96" src="res/icon/cordova_android_96.png" width="96" />
