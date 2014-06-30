@@ -32,34 +32,53 @@ var Controller = function (view, model) {
             options.marketplace) {
             // No need to present the login screen, we have the credentials
             // let's authenticate the user automatically.
-            controller.signin();
+            controller.signin(true);
         } else {
-            view.login.show();
+//            view.login.show();
+            controller.signin(false);
         }
     };
 
-    this.signin = function () {
+    this.signin = function (has_credentials) {
         console.log('signing in');
-        //TODO: validate input
-        var username = view.login.username();
-        var password = view.login.password();
-        var application = view.login.application();
-        var marketplace = view.login.marketplace();
+        if (has_credentials) {
+            //TODO: validate input
+            var username = view.login.username();
+            var password = view.login.password();
+            var application = view.login.application();
+            var marketplace = view.login.marketplace();
 
-        model.authenticate(username, password, application, marketplace)
-            .done(function () {
-                self.loadHome();
-                //authentication settings are valid, so store them
-                if (window.localStorage) {
-                    localStorage.setItem("username", username);
-                    localStorage.setItem("password", password);
-                    localStorage.setItem("application", application);
-                    localStorage.setItem("marketplace", marketplace);
-                }
-            })
-            .fail(function (err) {
-                view.alert('An error occurred while authenticating the user: ' + JSON.stringify(err));
-            });
+            model.authenticate(username, password, application, marketplace)
+                .done(function () {
+                    self.loadHome();
+                    //authentication settings are valid, so store them
+                    if (window.localStorage) {
+                        localStorage.setItem("username", username);
+                        localStorage.setItem("password", password);
+                        localStorage.setItem("application", application);
+                        localStorage.setItem("marketplace", marketplace);
+                    }
+                })
+                .fail(function (err) {
+                    view.alert('An error occurred while authenticating the user: ' + JSON.stringify(err));
+                });
+        } else {
+            model.authenticate()
+                .done(function () {
+                    self.loadHome();
+                    //authentication settings are valid, so store them
+//                    if (window.localStorage) {
+//                        localStorage.setItem("username", username);
+//                        localStorage.setItem("password", password);
+//                        localStorage.setItem("application", application);
+//                        localStorage.setItem("marketplace", marketplace);
+//                    }
+                })
+                .fail(function (err) {
+                    view.alert('An error occurred while authenticating the user: ' + JSON.stringify(err));
+                });
+        }
+
     };
 
     this.signout = function () {
