@@ -9,7 +9,7 @@ var Model = function () {
     /** private variables **/
     var self = this,
         kido = new Kido(),
-        tasksSet  = kido.storage().objectSet("tasks"),
+        tasksSet  = kido.storage().objectSet("tasks", true),
         logging   = kido.logging(),
         config    = kido.config();
 
@@ -23,7 +23,7 @@ var Model = function () {
         return kido.authenticate(username, password, provider)
             .done(function () {
                 // the user authenticated
-                tasksSet = kido.storage().objectSet("tasks");
+                tasksSet = kido.storage().objectSet("tasks", true);
                 logging  = kido.logging();
                 config   = kido.config();
             });

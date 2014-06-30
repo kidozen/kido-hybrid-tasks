@@ -57,8 +57,8 @@ var Controller = function (view, model) {
                     localStorage.setItem("marketplace", marketplace);
                 }
             })
-            .fail(function () {
-                view.alert('An error occurred while authenticating the user');
+            .fail(function (err) {
+                view.alert('An error occurred while authenticating the user: ' + JSON.stringify(err));
             });
     };
 
