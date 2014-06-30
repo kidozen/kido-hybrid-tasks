@@ -29,6 +29,22 @@ var Model = function () {
             });
     };
 
+    this.passiveAuth = function (application, marketplace) {
+        // if we are running in localhost, then it means we are developing,
+        // so we are already authenticated
+        if (window.location.hostname == "localhost") {
+            return $.Deferred().resolve();
+        }
+        var kido = new Kido(application, marketplace);
+        return kido.authenticate()
+            .done(function () {
+                // the user authenticated
+                tasksSet = kido.storage().objectSet("tasks", true);
+                logging  = kido.logging();
+                config   = kido.config();
+            });
+    };
+
     this.signout = function () {
         kido      = new Kido();
         tasksSet  = kido.storage().objectSet("tasks");
