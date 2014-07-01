@@ -1,8 +1,8 @@
 /****************************
-*
-* Views (DOM Manipulation)
-*
-*****************************/
+ *
+ * Views (DOM Manipulation)
+ *
+ *****************************/
 
 var View = function ($) {
 
@@ -13,37 +13,11 @@ var View = function ($) {
             alert(msg);
         },
 
-        login: {
-            load: function (opts) {
-                $("#sign-in-page .loading").hide();
-                $("#sign-in-page .loaded").show();
-                $("#username").val(opts.username);
-                $("#password").val(opts.password);
-                $("#application").val(opts.application);
-                $("#marketplace").val(opts.marketplace);
-            },
-            show: function () {
-                $.mobile.changePage("#sign-in-page");
-            },
-            username: function () {
-                return $("#username").val();
-            },
-            password: function () {
-                return $("#password").val();
-            },
-            application: function () {
-                return $("#application").val();
-            },
-            marketplace: function () {
-                return $("#marketplace").val();
-            }
-        },
-
         tasks: {
             show: function () {
                 $.mobile.changePage("#home");
             },
-            showLoadingView: function ( tab ) {
+            showLoadingView: function (tab) {
                 $("#tasks-filter > li > a").removeClass("ui-btn-active");
                 //activate the right tab.
                 $("#tasks-filter > li > a#" + tab + "-tasks").addClass("ui-btn-active");
@@ -56,24 +30,24 @@ var View = function ($) {
                 //refresh the UI
                 $("#tasks-list").listview("refresh").trigger("create");
             },
-            showListView: function ( tasks ) {
+            showListView: function (tasks) {
                 console.log("showing list of tasks");
                 //clean the tasks list
                 $("#tasks-list").html('');
                 //add a list item per task
-                $.each(tasks, function ( index, task ) {
+                $.each(tasks, function (index, task) {
                     $("#tasks-list").append(
-                        '<li>' +
+                            '<li>' +
                             '<a data-id="' + task._id + '" href="#">' +
-                                task.title +
+                            task.title +
                             '</a>' +
-                        '</li>'
+                            '</li>'
                     );
                 });
                 //refresh the UI
                 $("#tasks-list").listview("refresh").trigger("create");
             },
-            showErrorView: function ( err ) {
+            showErrorView: function (err) {
                 $("#tasks-list").html('<li>An error occured while querying the tasks</li>');
                 //refresh the UI
                 $("#tasks-list").listview("refresh").trigger("create");
@@ -103,10 +77,10 @@ var View = function ($) {
                 $("#details div[data-role=header] h1").html('loading...');
                 $("#details pre").html('');
             },
-            showDetails: function  ( task ) {
-                $("#details div[data-role=header] h1").html( task.title );
-                $("#details #task-id").val( task._id );
-                $("#details pre").html( task.desc );
+            showDetails: function (task) {
+                $("#details div[data-role=header] h1").html(task.title);
+                $("#details #task-id").val(task._id);
+                $("#details pre").html(task.desc);
             }
         }
     };

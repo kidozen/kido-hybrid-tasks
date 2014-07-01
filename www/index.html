@@ -17,46 +17,19 @@
                 </div>
             </div>
         </div>
-        <div data-role="page" id="sign-in-page">
-            <div data-role="header">
-                <h1>Tasks Manager</h1>
-            </div>
-            <div data-role="content">
-                <h2>Sign In</h2>
-                <form>
-                    <div data-role="fieldcontain" class="ui-hide-label">
-                        <label for="username">Username:</label>
-                        <input type="text" name="username" id="username" value="" placeholder="Username"/>
-                    </div>
-                    <div data-role="fieldcontain" class="ui-hide-label">
-                        <label for="password">Password:</label>
-                        <input type="password" name="password" id="password" value="" placeholder="Password"/>
-                    </div>
-                    <div data-role="fieldcontain" class="ui-hide-label">
-                        <label for="application">Application:</label>
-                        <input type="text" name="app-name" id="application" value="" placeholder="Application"/>
-                    </div>
-                    <div data-role="fieldcontain" class="ui-hide-label">
-                        <label for="marketplace">Marketplace:</label>
-                        <input type="text" name="marketplace" id="marketplace" value="" placeholder="Marketplace"/>
-                    </div>
-                    <a href="#" data-role="button" data-inline="true" data-icon="check" data-theme="b" id="sign-in">Sign In</a>
-                </form>
-            </div>
-        </div>
 
     	<div data-role="page" id="home">
             <div data-role="header">
 				<a href="#new" data-icon="plus">Create</a>
                 <h1>Tasks Management</h1>
-                <a href="#sign-in-page" data-icon="back" id="sign-out">Sign Out</a>
             </div>
 
-			<div data-role="content">
+            <div data-role="content">
                 <ul data-role="listview" data-filter="true" id="tasks-list">
                 </ul>
                 <hr>
             </div>
+
             <div data-role="footer" data-position="fixed">
                 <div data-role="navbar">
                     <ul id="tasks-filter">
@@ -64,8 +37,8 @@
                         <li><a id="completed-tasks" href="#" data-icon="check" data-icon-pos="top">Completed</a></li>
                         <li><a id="all-tasks" href="#" data-icon="grid" data-icon-pos="top">All</a></li>
                     </ul>
-                </div><!-- /navbar -->
-            </div><!-- /footer -->
+                </div>
+            </div>
     	</div>
 
         <div id="new" data-role="dialog">

@@ -1,84 +1,28 @@
 /****************************
-*
-* Controllers
-*
-* controller methods handle the interaction between the view and the models.
-* it will execute the necessary model methods and then call the appropiate view
-* to display the response.
-*
-*****************************/
+ *
+ * Controllers
+ *
+ * controller methods handle the interaction between the view and the models.
+ * it will execute the necessary model methods and then call the appropiate view
+ * to display the response.
+ *
+ *****************************/
 
 var Controller = function (view, model) {
     var self = this;
     if (!view) view = View($);
     if (!model) model = new Model();
 
-    this.loadSignin = function () {
-        if (window.localStorage) {
-            console.log("checking browser's localStorage");
-            // If the user authenticated once, then the credentials are being
-            // cached in `localStorage`
-            var get = localStorage.getItem.bind(localStorage);
-            options.username    = get("username")    || options.username;
-            options.password    = get("password")    || options.password;
-            options.application = get("application") || options.application;
-            options.marketplace = get("marketplace") || options.marketplace;
-        }
-        // populate Sign In Page with cached values
-        view.login.load(options);
-        if (options.username &&
-            options.password &&
-            options.application &&
-            options.marketplace) {
-            // No need to present the login screen, we have the credentials
-            // let's authenticate the user automatically.
-            controller.signin(true);
-        } else {
-//            view.login.show();
-            controller.signin(false);
-        }
-    };
-
-    this.signin = function (has_credentials) {
+    this.signin = function (application, marketplace) {
         console.log('signing in');
-
-        //TODO: validate input
-        var username = view.login.username();
-        var password = view.login.password();
-        var application = view.login.application();
-        var marketplace = view.login.marketplace();
-
-        if (has_credentials) {
-            model.authenticate(username, password, application, marketplace)
-                .done(function () {
-                    self.loadHome();
-                    //authentication settings are valid, so store them
-                    if (window.localStorage) {
-                        localStorage.setItem("username", username);
-                        localStorage.setItem("password", password);
-                        localStorage.setItem("application", application);
-                        localStorage.setItem("marketplace", marketplace);
-                    }
-                })
-                .fail(function (err) {
-                    view.alert('An error occurred while authenticating the user: ' + JSON.stringify(err));
-                });
-        } else {
-            model.passiveAuth(application, marketplace)
-                .done(function () {
-                    self.loadHome();
-                })
-                .fail(function (err) {
-                    view.alert('An error occurred while authenticating the user: ' + JSON.stringify(err));
-                });
-        }
-
-    };
-
-    this.signout = function () {
-        console.log('signing out');
-        model.signout();
-        view.login.show();
+        // call the KidoZen passive login strategy
+        model.authenticate(application, marketplace)
+            .done(function () {
+                self.loadHome();
+            })
+            .fail(function (err) {
+                view.alert('An error occurred while authenticating the user: ' + JSON.stringify(err));
+            });
     };
 
     this.loadHome = function () {
@@ -89,18 +33,18 @@ var Controller = function (view, model) {
 
         var query = {};
 
-        if ( filter )
-            query.completed = filter === "pending" ? false : true;
+        if (filter)
+            query.completed = filter !== "pending";
 
         view.tasks.showLoadingView(filter);
 
         model.queryTasks(query)
-            .done(function ( tasks ) {
+            .done(function (tasks) {
                 //1. if tasks is empty, display message.
-                if ( !tasks || !tasks.length )
+                if (!tasks || !tasks.length)
                     view.tasks.showEmptyView();
                 else
-                    //2. if tasks is not empty, display one <li> per task.
+                //2. if tasks is not empty, display one <li> per task.
                     view.tasks.showListView(tasks);
             })
             .fail(view.alert);
@@ -108,16 +52,16 @@ var Controller = function (view, model) {
 
     this.newTask = function () {
         var title = view.newTask.title();
-        var desc  = view.newTask.description();
-        model.insertTask( title, desc )
-            .done( function ( ) {
+        var desc = view.newTask.description();
+        model.insertTask(title, desc)
+            .done(function () {
                 //task saved. clean the form and load the pending tasks.
                 view.newTask.clear();
                 self.loadTasks('pending');
             })
-            .fail( function ( err ) {
-                view.alert("there's been a problem inserting the task." );
-                console.log( err );
+            .fail(function (err) {
+                view.alert("there's been a problem inserting the task.");
+                console.log(err);
             });
     };
 
@@ -131,7 +75,7 @@ var Controller = function (view, model) {
         model
             .getTask(_id)
             .done(view.task.showDetails)
-            .fail(function() {
+            .fail(function () {
                 alert("There's been an problem loading the task");
             });
     };
@@ -142,7 +86,7 @@ var Controller = function (view, model) {
             .done(function () {
                 self.loadTasks('pending');
             })
-            .fail(function ( err ) {
+            .fail(function (err) {
                 view.alert('unable to complete task');
                 console.log(err);
             });
@@ -154,7 +98,7 @@ var Controller = function (view, model) {
             .done(function () {
                 self.loadTasks('pending');
             })
-            .fail(function ( err ) {
+            .fail(function (err) {
                 view.alert('unable to delete task');
                 console.log(err);
             });
