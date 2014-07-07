@@ -7,9 +7,8 @@
 var Model = function () {
 
     /** private variables **/
-    var self = this,
-        kido = new Kido(),
-        tasksSet = kido.storage().objectSet("tasks", true), // 2nd param enables client-side caching
+    var kido = new Kido(),
+        tasksSet = kido.storage().objectSet("tasks", { caching: true, queueing: true }), // 2nd param enables client-side caching
         logging = kido.logging(),
         config = kido.config();
 
@@ -24,7 +23,7 @@ var Model = function () {
         return kido.authenticate()
             .done(function () {
                 // user authenticated
-                tasksSet = kido.storage().objectSet("tasks", true);
+                tasksSet = kido.storage().objectSet("tasks", { caching: true, queueing: true });
                 logging = kido.logging();
                 config = kido.config();
             });
@@ -55,7 +54,7 @@ var Model = function () {
                 logging.writeInfo("new task '" + title + "' has been created.");
             })
             .fail(function (err) {
-                logging.writeError("an error occured trying to insert a task: " + JSON.stringify(err, 0, 2));
+                logging.writeError("an error occured trying to insert a task: " + JSON.stringify(err));
             });
     };
 
@@ -73,8 +72,8 @@ var Model = function () {
             .done(function (t) {
                 logging.writeInfo("task '" + t.title + "' has been completed.");
             })
-            .fail(function () {
-                logging.writeError("an error occured trying to complete a task: " + JSON.stringify(err, 0, 2));
+            .fail(function (err) {
+                logging.writeError("an error occured trying to complete a task: " + JSON.stringify(err));
             });
     };
 
