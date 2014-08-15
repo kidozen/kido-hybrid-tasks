@@ -31,7 +31,7 @@ var Model = function () {
 
     this.signout = function () {
         kido = new Kido();
-        tasksSet = kido.storage().objectSet("tasks");
+        tasksSet = kido.storage().objectSet("tasks", { caching: true, queueing: true });
         logging = kido.logging();
         config = kido.config();
     };
