@@ -27,12 +27,9 @@ if (window.isNative) {
     // Cordova/PhoneGap.
     // to be able to use passive login you must
     // set 'application' and 'marketplace' options.
-    // 'username' and 'password' do not need to be set.
     var options = {
-        username: '',
-        password: '',
-        application: '',
-        marketplace: ''
+        application: 'tasks',
+        marketplace: 'tenant.kidocloud.com'
     };
     // once the device ready event is triggered, sign into KidoZen
     // screen

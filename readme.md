@@ -43,3 +43,14 @@ The web app has a series of unit tests in `www/spec` which were built using [Jas
 	kido app-run myapp1 mycompany1.kidocloud.com
 
 Go with your browser to `http://localhost:3000/spec.html`
+
+## Passive authentication
+
+In order to use passive authentication you need to set some options in the `app.js` file which is placed in `www/js/app.js`:
+
+```javascript
+var options = {
+    application: 'tasks',
+    marketplace: 'tenant.kidocloud.com'
+};
+```
