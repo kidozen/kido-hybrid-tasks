@@ -1,4 +1,4 @@
-// KidoZen Javascript SDK v0.1.6.
+// KidoZen Javascript SDK v0.1.7.
 // Copyright (c) 2013 Kidozen, Inc. MIT Licensed
 /**
  * Kido - Kidozen representation of an Application.
@@ -21,6 +21,11 @@ var Kido = function (name, marketplace) {
 
     if (!(this instanceof Kido)) return new Kido();
 
+    if (typeof $ === 'undefined') throw "jQuery 1.8 or above is required to use the Kido SDK.";
+    if (typeof $.fn === 'undefined' || typeof $.fn.jquery === 'undefined') throw "Could not determine jQuery version.";
+    var $version = $.fn.jquery.split('.');
+    if (parseInt($version[0]) < 2 && parseInt($version[1]) < 8) throw "jQuery 1.8 or above is required to use the Kido SDK.";
+
     if (typeof marketplace !== 'undefined') {
         if (marketplace.indexOf('://') === -1) {
             marketplace = 'https://' + marketplace;
@@ -40,6 +45,7 @@ var Kido = function (name, marketplace) {
     this.local = this.name === 'local';
     this.hosted = !marketplace;
     this.authenticated = this.hosted ? true : false;
+    this.isNative = (document.URL.indexOf('http://') === -1 && document.URL.indexOf('https://') === -1);
 
     // get the application security configuration in case of
     // hosted authentication.
@@ -237,23 +243,43 @@ var Kido = function (name, marketplace) {
         }
         var deferred = $.Deferred();
         var ref = window.open(config.signInUrl, '_blank', 'location=yes');
-        ref.addEventListener('loadstop', function (event) {
-            ref.executeScript({
-                code: 'document.title;'
-            }, function (values) {
-                var refTitle = values[0];
-                if (refTitle.indexOf('Success payload=') !== -1) {
-                    ref.close();
-                    var token = JSON.parse(window.atob(refTitle.replace('Success payload=', '')));
-                    // rawToken is verified for backwards compatibility
-                    if (!token || (!token.access_token && !token.rawToken)) {
-                        return deferred.reject('Unable to retrieve KidoZen token.');
+        if (self.isNative) {
+            // cordova
+            ref.addEventListener('loadstop', function (event) {
+                ref.executeScript({
+                    code: 'document.title;'
+                }, function (values) {
+                    var refTitle = values[0];
+                    if (refTitle.indexOf('Success payload=') !== -1) {
+                        try {
+                            var token = processTokenForPassiveAuth(refTitle);
+                            self.authenticated = true;
+                            deferred.resolve(token);
+                        } catch (err) {
+                            deferred.reject('Unable to retrieve KidoZen token.');
+                        }
+                        ref.close();
                     }
-                    self.authenticated = true;
-                    deferred.resolve(processToken(token));
-                }
+                });
             });
-        });
+        } else {
+            // browser
+            window.addEventListener('message', function(event) {
+                var signInUrl = document.createElement('a');
+                signInUrl.href = config.signInUrl;
+                if (event.origin !== (signInUrl.protocol + '//' + signInUrl.host)) {
+                    return deferred.reject('Unable to retrieve KidoZen token.');
+                }
+                try {
+                    var token = processTokenForPassiveAuth(event.data);
+                    self.authenticated = true;
+                    deferred.resolve(token);
+                } catch (err) {
+                    deferred.reject('Unable to retrieve KidoZen token.');
+                }
+                ref.close();
+            }, false);
+        }
         return deferred.promise();
     }
 
@@ -301,6 +327,23 @@ var Kido = function (name, marketplace) {
                 return processToken(token);
             });
         });
+    }
+
+    /**
+     * Process the token and modifies expiration time
+     * for the passive authentication strategy
+     * @private
+     */
+    function processTokenForPassiveAuth(token) {
+        if (token.indexOf('Success payload=') === -1) {
+            throw 'Unable to retrieve KidoZen token.';
+        }
+        token = JSON.parse(window.atob(token.replace('Success payload=', '')));
+        // rawToken is verified for backwards compatibility
+        if (!token || (!token.access_token && !token.rawToken)) {
+            throw 'Unable to retrieve KidoZen token.';
+        }
+        return processToken(token);
     }
 
     /**
@@ -2010,10 +2053,6 @@ var KidoOffline = function (kidoApp) {
          */
         pending_requests = self.app.localStorage().collection('pending_requests', this),
         /**
-         * @type {boolean}
-         */
-        isNative = (document.URL.indexOf("http://") == -1),
-        /**
          * @type {URL|*}
          */
         URL = window.URL || window.webkitURL,
@@ -2038,7 +2077,7 @@ var KidoOffline = function (kidoApp) {
     this.startCheckingConnectivity = function () {
         if (!worker) {
             // Check if browser is not able to use Web Workers
-            if (isNative || !URL || !Blob || !Worker) {
+            if (self.app.isNative || !URL || !Blob || !Worker) {
                 // Create fallback
                 worker = setInterval(function () {
                     console.log('Interval is checking connection...');

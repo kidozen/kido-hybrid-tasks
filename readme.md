@@ -61,4 +61,8 @@ You can use the following command to install the plugin: (depending on your Cord
 
 ```
 $ cordova plugin add https://git-wip-us.apache.org/repos/asf/cordova-plugin-inappbrowser.git
-```
+```Go with your browser to `http://localhost:3000/spec.html`
+
+##Important
+
+**jQuery 1.8 or above is required**
