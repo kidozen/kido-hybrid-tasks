@@ -43,3 +43,7 @@ The web app has a series of unit tests in `www/spec` which were built using [Jas
 	kido app-run myapp1 mycompany1.kidocloud.com
 
 Go with your browser to `http://localhost:3000/spec.html`
+
+##Important
+
+**jQuery 1.8 or above is required**
