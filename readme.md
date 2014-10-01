@@ -60,8 +60,8 @@ And be sure to install the InAppBrowser Cordova plugin.
 You can use the following command to install the plugin: (depending on your Cordova's version)
 
 ```
-$ cordova plugin add https://git-wip-us.apache.org/repos/asf/cordova-plugin-inappbrowser.git
-```Go with your browser to `http://localhost:3000/spec.html`
+$ cordova plugin add org.apache.cordova.inappbrowser
+```
 
 ##Important
 
