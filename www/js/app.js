@@ -29,13 +29,14 @@ if (window.isNative) {
     // set 'application' and 'marketplace' options.
     var options = {
         application: 'tasks',
-        marketplace: 'tenant.kidocloud.com'
+        marketplace: 'tenant.kidocloud.com',
+        secretKey: 'your-app-secret-key'
     };
     // once the device ready event is triggered, sign into KidoZen
     // screen
     function deviceready() {
         console.log('device ready');
-        controller.signin(options.application, options.marketplace);
+        controller.signin(options.application, options.marketplace, options.secretKey);
     }
 
     document.addEventListener('deviceready', deviceready, false);

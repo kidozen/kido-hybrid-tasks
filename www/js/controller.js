@@ -13,10 +13,10 @@ var Controller = function (view, model) {
     if (!view) view = View($);
     if (!model) model = new Model();
 
-    this.signin = function (application, marketplace) {
+    this.signin = function (application, marketplace, secretKey) {
         console.log('signing in');
         // call the KidoZen passive login strategy
-        model.authenticate(application, marketplace)
+        model.authenticate(application, marketplace, secretKey)
             .done(function () {
                 self.loadHome();
             })

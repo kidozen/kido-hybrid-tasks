@@ -12,14 +12,15 @@ var Model = function () {
         logging = kido.logging(),
         config = kido.config();
 
-    this.authenticate = function (application, marketplace) {
+    this.authenticate = function (application, marketplace, secretKey) {
         // if we are running in localhost, then it means we are developing,
         // so we are already authenticated
         if (window.location.hostname == "localhost") {
             return $.Deferred().resolve();
         }
         // kido passive auth strategy
-        kido = new Kido(application, marketplace);
+        // secretKey in the 3rd param allows token to be refreshed automatically
+        kido = new Kido(application, marketplace, { secretKey: secretKey });
         return kido.authenticate()
             .done(function () {
                 // user authenticated
