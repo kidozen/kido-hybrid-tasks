@@ -20,7 +20,7 @@ authenticated.
 var view = new View($);
 var controller = new Controller(view);
 
-window.isNative = (document.URL.indexOf("http://") == -1);
+window.isNative = (document.URL.indexOf("http") !== 0);
 console.log("running in " + (isNative ? "native" : "hosted") + " mode");
 
 if (window.isNative) {
