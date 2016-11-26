@@ -37,7 +37,7 @@ The Web Application is located in the `www` folder. It uses MVC to separate the 
 
 ## Unit Tests
 
-The web app has a series of unit tests in `www/spec` which were built using [Jasmine](http://pivotal.github.io/jasmine/) framework, and can be run locally using the `kido` client tool like this:
+The web app has a series of unit tests in `www/spec` which were built using [Jasmine](https://jasmine.github.io/) framework, and can be run locally using the `kido` client tool like this:
 
 	cd www
 	kido app-run myapp1 mycompany1.kidocloud.com
